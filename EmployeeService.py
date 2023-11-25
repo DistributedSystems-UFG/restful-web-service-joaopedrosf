@@ -34,6 +34,11 @@ def getEmp(empId):
     usr = [ emp for emp in empDB if (emp['id'] == empId) ] 
     return jsonify({'emp':usr})
 
+@app.route('/empdb/employee/salary/mean', methods=['GET'])
+def getSalaryMean():
+    salaries = list(map(lambda x: float(x['salary']), empDB))
+    salaryMean = sum(salaries) / len(salaries)
+    return jsonify({'salaryMean': salaryMean})
 
 @app.route('/empdb/employee/<empId>',methods=['PUT'])
 def updateEmp(empId):
@@ -54,6 +59,14 @@ def updateEmpSal(empId,empSal):
     em = [ emp for emp in empDB if (emp['id'] == empId) ]
     em[0]['salary'] = empSal
     return jsonify(em)
+
+@app.route('/empdb/employee/salary/raise', methods=['PUT'])
+def giveSalaryRaise():
+    args = request.args
+    percentage = float(args.get('percentage'))
+    for emp in empDB:
+        emp['salary'] = str(float(emp['salary']) * (1 + (percentage/100)))
+    return ('', 204)
    
 @app.route('/empdb/employee',methods=['POST'])
 def createEmp():

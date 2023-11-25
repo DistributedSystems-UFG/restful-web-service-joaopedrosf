@@ -12,6 +12,16 @@ def serviceTester():
     response = requests.get(api_url)
     print (response.json())
 
+    api_url = api_base_url + '/salary/mean'
+    print ('Calling GET on endpoint: ' + api_url)
+    response = requests.get(api_url)
+    print (response.json())
+
+    api_url = api_base_url + '/salary/raise?percentage=100'
+    print ('Calling PUT on endpoint: ' + api_url)
+    response = requests.put(api_url)
+    print (response.status_code)
+
     # Test get_an_employee endpoint
     api_url = api_base_url + '/201'
     print ('Calling GET on endpoint: ' + api_url)
