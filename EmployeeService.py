@@ -108,5 +108,5 @@ atexit.register(unregister_service)
 if __name__ == '__main__':
  with app.app_context():
     register_service()
- app.run(host=get_ip(), port=PORT)
+ app.run(host='0.0.0.0', port=PORT)
      
