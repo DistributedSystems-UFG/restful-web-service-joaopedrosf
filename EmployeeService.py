@@ -7,6 +7,9 @@ from flask import Flask
 from flask import jsonify
 from flask import request
 from flask import abort
+import requests
+from const import *
+import atexit
 
 app = Flask(__name__)
 
@@ -88,6 +91,22 @@ def deleteEmp(empId):
         return jsonify({'response':'Success'})
     else:
         return jsonify({'response':'Failure'})
+    
+def register_service():
+    requests.post(DNS_IP + '/register', json={'serviceName': SERVICE_NAME, 'url': get_ip() + ':4567'}) 
+
+def unregister_service():
+    payload = {'serviceName': SERVICE_NAME}
+    requests.delete(DNS_IP + '/unregister', params=payload)
+
+def get_ip():
+    response = requests.get('https://httpbin.org/get')
+    return response.json()['origin']
+
+atexit.register(unregister_service)
 
 if __name__ == '__main__':
- app.run(host='0.0.0.0', port=5000)
+ with app.app_context():
+    register_service()
+ app.run(host=get_ip(), port=PORT)
+     
